@@ -1,28 +1,29 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "monty.h"
 #include <string.h>
+#include "monty.h"
 
 int main(int argc, char *argv[]) {
-    /* Check if a file argument is provided*/
+    FILE *file;
+    Stack *stack = NULL;
+    char opcode[10];
+    int value;
+    int line_number = 0;
+
+    /* Check if a file argument is provided */
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <file>\n", argv[0]);
         return EXIT_FAILURE;
     }
 
-    /* Open the Monty bytecode file*/
-    FILE *file = fopen(argv[1], "r");
+    /* Open the Monty bytecode file */
+    file = fopen(argv[1], "r");
     if (file == NULL) {
         fprintf(stderr, "Error: Unable to open file %s\n", argv[1]);
         return EXIT_FAILURE;
     }
 
-    Stack *stack = NULL;
-
-    /* Parse and execute the bytecode commands*/
-    char opcode[10];
-    int value;
-    int line_number = 0;
+    /* Parse and execute the bytecode commands */
     while (fscanf(file, "%s", opcode) != EOF) {
         line_number++;
 
@@ -42,10 +43,10 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    /* Close the file*/
+    /* Close the file */
     fclose(file);
 
-    /* Free the memory allocated for the stack*/
+    /* Free the memory allocated for the stack */
     while (stack != NULL) {
         Stack *temp = stack;
         stack = stack->next;
