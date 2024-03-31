@@ -13,7 +13,6 @@ int main(int argc, char *argv[])
     unsigned int line_number = 0;
     char *opcode, *arg;
     stack_t *temp;
-    size_t len;
 
     if (argc != 2)
     {
@@ -32,11 +31,9 @@ int main(int argc, char *argv[])
     {
         line_number++;
 
-        len = strlen(line);
-
-        if (len > 0 && line[len - 1] == '\n')
+        if (strlen(line) > 0 && line[strlen(line) - 1] == '\n')
         {
-            line[len - 1] = '\0';
+            line[strlen(line) - 1] = '\0';
         }
 
         opcode = strtok(line, " ");
@@ -44,12 +41,6 @@ int main(int argc, char *argv[])
 
         if (opcode != NULL)
         {
-            printf("%s", opcode); /* Print the opcode */
-            if (arg != NULL)
-            {
-                printf(" %s", arg); /* Print the argument if it exists */
-            }
-            printf("$\n"); /* Add $ and newline */
             if (strcmp(opcode, "push") == 0 && arg != NULL)
             {
                 int value = atoi(arg);
