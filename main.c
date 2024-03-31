@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     unsigned int line_number = 0;
     char *opcode, *arg;
     stack_t *temp;
-    size_t len; /* Declare len here */
+    size_t len;
 
     if (argc != 2)
     {
@@ -33,25 +33,19 @@ int main(int argc, char *argv[])
         line_number++;
 
         /* Strip the end-of-line character */
-        len = strlen(line); /* Move declaration to the beginning of the block */
+        len = strlen(line);
         if (len > 0 && line[len - 1] == '\n')
         {
             line[len - 1] = '\0';
         }
-      
+
+        /* Parse the line to extract opcode and argument */
         opcode = strtok(line, " ");
         arg = strtok(NULL, " ");
 
         if (opcode != NULL)
         {
-            /* Print the opcode and argument (if any)*/
-            printf("%s", opcode);
-            if (arg != NULL)
-            {
-                printf(" %s\n", arg);
-            }
-
-            /* Execute the opcode*/
+            /* Execute the opcode */
             if (strcmp(opcode, "push") == 0 && arg != NULL)
             {
                 int value = atoi(arg);
@@ -59,9 +53,15 @@ int main(int argc, char *argv[])
             }
             else if (strcmp(opcode, "pint") == 0)
             {
-                pint(&stack, line_number);
+                if (stack == NULL)
+                {
+                    fprintf(stderr, "L%u: can't pint, stack empty\n", line_number);
+                    fclose(file);
+                    return EXIT_FAILURE;
+                }
+                printf("%d\n", stack->n);
             }
-            /* Add support for other opcodes as needed*/
+            /* Add support for other opcodes as needed */
             else
             {
                 fprintf(stderr, "L%u: unknown instruction %s\n", line_number, opcode);
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
 
     fclose(file);
 
-    /* Free memory and exit*/
+    /* Free memory and exit */
     while (stack != NULL)
     {
         temp = stack;
