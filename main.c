@@ -3,24 +3,43 @@
 #include <string.h>
 #include "monty.h"
 
-int main(void)
+int main(int argc, char *argv[])
 {
+    FILE *file;
     Stack stack;
     char opcode[10];
     int value;
     int line_number = 0;
+    char line[100];
+
+    if (argc != 2)
+    {
+        fprintf(stderr, "Usage: %s <file>\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+
+    file = fopen(argv[1], "r");
+    if (file == NULL)
+    {
+        fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
+        return EXIT_FAILURE;
+    }
 
     stack.top = 0;
 
-    while (scanf("%s", opcode) != EOF)
+    while (fgets(line, sizeof(line), file) != NULL)
     {
         line_number++;
+        if (sscanf(line, "%s", opcode) != 1)
+            continue;
+
         if (strcmp(opcode, "push") == 0)
         {
-            if (scanf("%d", &value) != 1)
+            if (sscanf(line, "%*s %d", &value) != 1)
             {
                 fprintf(stderr, "L%d: usage: push integer\n", line_number);
-                exit(EXIT_FAILURE);
+                fclose(file);
+                return EXIT_FAILURE;
             }
             push(&stack, value, line_number);
         }
@@ -31,9 +50,12 @@ int main(void)
         else
         {
             fprintf(stderr, "L%d: Unknown opcode: %s\n", line_number, opcode);
-            exit(EXIT_FAILURE);
+            fclose(file);
+            return EXIT_FAILURE;
         }
     }
 
-    return 0;
+    fclose(file);
+    return EXIT_SUCCESS;
 }
+
