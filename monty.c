@@ -1,56 +1,42 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "monty.h"
 
 /**
- * push -fuvtion tht Pushes an element onto the stack.
- * @stack: Double pointer to the head node of the stack.
- * @line_number: The line number being executed from the script file.
- * @value: The value to be pushed to the stack.
+ * push - Pushes an element onto the stack
+ * @s: Pointer to the stack
+ * @value: Value to be pushed
+ * @line_number: Line number where the opcode appears
+ *
+ * Description: This function pushes an element onto the stack.
  */
-void push(stack_t **stack, unsigned int line_number, int value)
+void push(Stack *s, int value, int line_number)
 {
-	stack_t *new_node;
-
-	(void)line_number;
-
-	new_node = malloc(sizeof(stack_t));
-	if (new_node == NULL)
+	if (s->top == STACK_SIZE)
 	{
-	fprintf(stderr, "Error: malloc failed\n");
+	fprintf(stderr, "L%d: Stack overflow\n", line_number);
 	exit(EXIT_FAILURE);
 	}
-
-	new_node->n = value;
-	new_node->prev = NULL;
-
-	if (*stack != NULL)
-	{
-	new_node->next = *stack;
-	(*stack)->prev = new_node;
-	}
-	else
-	{
-	new_node->next = NULL;
-	}
-
-	*stack = new_node;
+	s->stack[s->top++] = value;
 }
 
 /**
- * pall -function Prints all the values on the stack, starting from the top.
- * @stack: Double pointer to the head node of the stack.
- * @line_number: The line number being executed from the script file.
+ * pall - Prints all the values on the stack
+ * @s: Pointer to the stack
+ *
+ * Description: This function prints all the values on the stack.
  */
-void pall(stack_t **stack, unsigned int line_number)
+void pall(Stack *s)
 {
-	stack_t *current;
+	int i;
 
-	(void)line_number;
-
-	current = *stack;
-
-	while (current != NULL)
+	if (s->top == 0)
 	{
-	printf("%d\n", current->n);
-	current = current->next;
+	return;
+	}
+
+	for (i = s->top - 1; i >= 0; i--)
+	{
+	printf("%d\n", s->stack[i]);
 	}
 }
