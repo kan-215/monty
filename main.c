@@ -3,6 +3,7 @@
 #include <string.h>
 #include "monty.h"
 
+
 int main(int argc, char *argv[])
 {
     FILE *file;
@@ -47,6 +48,10 @@ int main(int argc, char *argv[])
         {
             pall(&stack);
         }
+        else if (strcmp(opcode, "pint") == 0)
+        {
+            pint(&stack, line_number);
+        }
         else
         {
             fprintf(stderr, "L%d: Unknown opcode: %s\n", line_number, opcode);
@@ -58,4 +63,3 @@ int main(int argc, char *argv[])
     fclose(file);
     return EXIT_SUCCESS;
 }
-
