@@ -11,5 +11,5 @@ typedef struct Stack_s {
 void push(Stack *s, int value, int line_number);
 void pall(Stack *s);
 void pint(Stack *s, int line_number);
-
+void pop(Stack *s, int line_number);
 #endif /* MONTY_H */
